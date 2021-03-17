@@ -1,17 +1,13 @@
-FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.14-alpine as builder
-
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
-ARG TARGETOS
-ARG TARGETARCH
-
+FROM golang:alpine AS builder
+RUN apk update && apk add --no-cache git && apk add -U --no-cache ca-certificates
 WORKDIR /app/
-RUN apk update && apk add --no-cache --update gcc musl-dev git && adduser -D -g '' gopher && apk add -U --no-cache ca-certificates
 ADD go.mod go.sum ./
 RUN go mod download
 ADD . .
-RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o feed-fetcher .
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-w -s" -o feed-fetcher main.go
 
-COPY ./views /app/
-
+FROM scratch
+WORKDIR /app/
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /app/feed-fetcher /app/feed-fetcher
 ENTRYPOINT ["/app/feed-fetcher"]
