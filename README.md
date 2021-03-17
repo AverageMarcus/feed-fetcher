@@ -2,13 +2,42 @@
 
 Returns the RSS feed associated with the given URL
 
-## Features
-
-## Install
+## Usage
 
 ```sh
-
+GET https://feed-fetcher.cluster.fun/?url=${URL_TO_CHECK}
 ```
+
+Example:
+
+```sh
+curl -v http://localhost:8000/\?url\=https://marcusnoble.co.uk/
+*   Trying 127.0.0.1...
+* TCP_NODELAY set
+* Connected to localhost (127.0.0.1) port 8000 (#0)
+> GET /?url=https://marcusnoble.co.uk/ HTTP/1.1
+> Host: localhost:8000
+> User-Agent: curl/7.64.1
+> Accept: */*
+>
+< HTTP/1.1 307 Temporary Redirect
+< Date: Wed, 17 Mar 2021 09:44:32 GMT
+< Content-Type: text/plain; charset=utf-8
+< Content-Length: 18
+< Location: https://marcusnoble.co.uk/feed.xml
+<
+* Connection #0 to host localhost left intact
+Temporary Redirect* Closing connection 0
+```
+
+### Possible status code responses
+
+* **300** - Multiple possible feeds found on page (the first is returned on the `Location` header)
+* **301** - URL provided was already a valid feed URL
+* **307** - Feed URL found on provided page
+* **400** - No URL provided
+* **404** - No feed URL found on provided webpage
+* **500** - Server error while trying to fetch feed
 
 ## Building from source
 
@@ -23,8 +52,6 @@ Standalone:
 ```sh
 make build
 ```
-
-## Resources
 
 ## Contributing
 
