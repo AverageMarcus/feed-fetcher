@@ -168,3 +168,6 @@ temp/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+*.fiber.gz
+.vscode
