@@ -47,7 +47,7 @@ ci:
 
 .PHONY: release # Release the latest version of the application
 release:
-	@echo "⚠️ 'release' unimplemented"
+	@kubectl --namespace feed-fetcher set image deployment feed-fetcher web=docker.cluster.fun/averagemarcus/feed-fetcher:$(SHA)
 
 .PHONY: help # Show this list of commands
 help:
