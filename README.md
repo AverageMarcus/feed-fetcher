@@ -2,6 +2,8 @@
 
 Returns the RSS feed associated with the given URL
 
+Available at https://feed-fetcher.cluster.fun/
+
 ## Usage
 
 ```sh
