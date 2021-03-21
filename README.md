@@ -1,4 +1,4 @@
-# feed-fetcher
+![feed-fetcher](logo.png)
 
 Returns the RSS feed associated with the given URL
 
