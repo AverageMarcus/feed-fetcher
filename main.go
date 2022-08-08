@@ -79,7 +79,7 @@ func getFeeds(requestURL string) ([]string, int) {
 	} else if err != nil && err == gofeed.ErrFeedTypeNotDetected {
 		res, err := http.Get(requestURL)
 		if err != nil {
-			fmt.Println("Failed to fetch URL")
+			fmt.Printf("Failed to fetch URL %s", requestURL)
 			return feeds, fiber.StatusInternalServerError
 		}
 		defer res.Body.Close()
@@ -95,9 +95,9 @@ func getFeeds(requestURL string) ([]string, int) {
 			return feeds, fiber.StatusInternalServerError
 		}
 
-		matches := doc.Find(`[rel="alternate"][type="application/rss+xml"]`)
+		matches := doc.Find(`[rel="alternate"][type="application/rss+xml"],[rel="alternate"][type="application/atom+xml"]`)
 		if matches.Length() == 0 {
-			fmt.Println("No RSS feeds found on page")
+			fmt.Printf("No RSS feeds found on page %s\n", requestURL)
 			return feeds, fiber.StatusNotFound
 		}
 
@@ -106,10 +106,10 @@ func getFeeds(requestURL string) ([]string, int) {
 		})
 
 		if matches.Length() > 1 {
-			fmt.Println("Multiple feeds found on page")
+			fmt.Printf("Multiple RSS feed found on page %s\n", requestURL)
 			return feeds, fiber.StatusMultipleChoices
 		} else {
-			fmt.Println("Feed found on page")
+			fmt.Printf("Single RSS feed found on page %s\n", requestURL)
 			return feeds, fiber.StatusTemporaryRedirect
 		}
 	} else if err != nil {
